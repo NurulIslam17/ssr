@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use DataTables;
 
 class StudentController extends Controller
 {
@@ -12,11 +13,20 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::orderBy('id','DESC')->get();
-        // dd($students);
-        return view('ssr.index',compact('students'));
+        if ($request->ajax()) {
+            $data = Student::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        return view('ssr.index');
     }
 
     /**
@@ -91,18 +101,13 @@ class StudentController extends Controller
     {
         $student = Student::find($id);
         // return $student;
-        if($student->status == 1)
-        {
+        if ($student->status == 1) {
             $student->status = 0;
             $student->save();
-        }
-        else
-        {
+        } else {
             $student->status = 1;
             $student->save();
         }
-
-        return back()->with('msg','Status Changed');
-
+        return back()->with('msg', 'Status Changed');
     }
 }
