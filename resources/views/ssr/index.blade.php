@@ -10,7 +10,7 @@
            <i class="fa fa-server"></i> Server Side Rendering
           </h5>
           <p>{{ Session::get('msg')}}</p>
-          <button class="btn btn-sm btn-success rounded-0"> <i class="fa fa-plus pe-1"></i>Create</button>
+          <a href="{{ route('student.create')}}" class="btn btn-sm btn-success rounded-0"> <i class="fa fa-plus pe-1"></i>Create</a>
         </div>
       </div>
     </div>

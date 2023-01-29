@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use DataTables;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash as HidePass;
+// use Illuminate\Testing\Fluent\Concerns\Hash;
 
 class StudentController extends Controller
 {
@@ -13,9 +16,9 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->ajax()) {
+        if (request()->ajax()) {
             $data = Student::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -36,7 +39,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        return view('ssr.create');
     }
 
     /**
@@ -47,7 +50,21 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // return $request;
+        try{
+
+            DB::table('students')->insert([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => HidePass::make($request->password),
+            ]);
+
+            return redirect()->route('student.index')->with('msg','New Record Created');
+
+        }catch(\Throwable $th)
+        {
+            return $th;
+        }
     }
 
     /**
