@@ -76,10 +76,7 @@
 
                 </div>
             </div>
-            {{-- <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary">Update</button>
-            </div> --}}
+
         </div>
     </div>
 </div>
@@ -146,9 +143,6 @@
                 });
             }
         });
-
-
-
         ///////////////////////////////////  Edit record        /////////////////////////////////////////
         $('.yajra-datatable').on('click', '.editUser', function() {
 
@@ -174,32 +168,10 @@
 
         $("#save_update_btn").click(function() {
 
-            // e.preventDefault();
-
             let id = $('#update_by_id').val();
             let name = $('#up_name').val();
             let email = $('#up_email').val();
             let password = $('#up_password').val();
-            // alert(id);
-            alert(name);
-            // alert(email);
-
-            // $.ajax({
-            //   url: "{{ route('student_delete') }}",
-            //   type: 'post',
-            //   data: {
-            //       id: id
-            //   },
-            //   success: function(response) {
-            //       if (response.success == 1) {
-            //           setTimeout(function() {
-            //               location.reload();
-            //           }, 10);
-            //       } else {
-            //           alert("Invalid ID.");
-            //       }
-            //   }
-            // });
 
             $.ajax({
                 url: "{{ route('update_data') }}",
@@ -214,6 +186,7 @@
                     if (response.status == 1) {
                         $(".modal").modal('hide');
                         $('#update_form')[0].reset();
+                        window.location.href="/student";
                     }
                 }
             });

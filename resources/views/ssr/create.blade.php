@@ -83,7 +83,7 @@
                     if(response.status == 1)
                     {
                       $('#add_form')[0].reset();
-                      window.location.href="http://127.0.0.1:8000/student";
+                      window.location.href="/student";
                     }
                 }
             });
