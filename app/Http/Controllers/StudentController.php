@@ -7,6 +7,7 @@ use App\Models\Student;
 use DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
 {
@@ -18,22 +19,22 @@ class StudentController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $data = Student::orderby('id','DESC')->get();
+            $data = Student::orderby('id', 'DESC')->get();
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('status', function($row){
-                    if($row->status == 1){
-                         return "Active";
-                    }else{
-                         return "Inactive";
+                ->addColumn('status', function ($row) {
+                    if ($row->status == 1) {
+                        return "Active";
+                    } else {
+                        return "Inactive";
                     }
-               }) 
+                })
                 ->addColumn('action', function ($row) {
                     // Update Button
-                 $updateButton = "<button class='btn btn-sm btn-info editUser' data-id='".$row->id."'><i class='fa-solid fa-pen-to-square'></i></button>";
-                 // Delete Button
-                 $deleteButton = "<button class='btn btn-sm btn-danger deleteUser' data-id='".$row->id."'><i class='fa-solid fa-trash'></i></button>";
-                 return $updateButton." ".$deleteButton;
+                    $updateButton = "<button class='btn btn-sm btn-info editUser' data-id='" . $row->id . "' data-name='" . $row->name . "' data-email='" . $row->email . "' data-password='" . $row->password . "'><i class='fa-solid fa-pen-to-square'></i></button>";
+                    // Delete Button
+                    $deleteButton = "<button class='btn btn-sm btn-danger deleteUser' data-id='" . $row->id . "'><i class='fa-solid fa-trash'></i></button>";
+                    return $updateButton . " " . $deleteButton;
                 })
                 ->make(true);
         }
@@ -59,18 +60,17 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         // return $request;
-        try{
+        try {
 
             DB::table('students')->insert([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
-
-            return redirect()->route('student.index')->with('msg','New Record Created');
-
-        }catch(\Throwable $th)
-        {
+            return response()->JSON([
+                'status' => 1,
+            ]);
+        } catch (\Throwable $th) {
             return $th;
         }
     }
@@ -106,7 +106,6 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
     }
 
     /**
@@ -115,7 +114,7 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
         //
     }
@@ -144,22 +143,35 @@ class StudentController extends Controller
         $data = Student::find($id);
 
 
-         if($data->delete()){
-             $response['success'] = 1;
-             $response['msg'] = 'Delete successfully'; 
-         }else{
-             $response['success'] = 0;
-             $response['msg'] = 'Invalid ID.';
-         }
+        if ($data->delete()) {
+            $response['success'] = 1;
+            $response['msg'] = 'Delete successfully';
+        } else {
+            $response['success'] = 0;
+            $response['msg'] = 'Invalid ID.';
+        }
 
-         return response()->json($response); 
+        return response()->json($response);
     }
 
-    //editData 
-    public function editData(Request $request)
+ 
+    public function updateData(Request $request)
     {
-        $id = $request->post('id');
-        return response()->json($id);
-        $data = Student::find($id);
+      
+        try {
+            $update_id = $request->id;
+            DB::table('students')->where('id',$update_id)->update([
+                'name' =>$request->name,
+                'email' =>$request->email,
+                'password' => Hash::make($request->password),
+            ]);
+            return response()->JSON([
+                'status' => 1,
+            ]);
+        } catch(\Throwable $th) {
+            return $th;
+        }
     }
+
+   
 }

@@ -35,9 +35,58 @@
     </div>
 @endsection
 
+
+<!-- Modal -->
+<div class="modal fade editUser" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-light" id="exampleModalLabel">Edit</h5>
+                <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card card-body">
+                    <form id="update_form">
+                        @csrf
+                        @method('post')
+                        <input type="hidden" name="update_by_id" id="update_by_id">
+                        <div class="form-group mb-3">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" name="name" id="up_name"
+                                placeholder="Enter name" autocomplete="on">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" name="email" id="up_email"
+                                placeholder="Enter email" autocomplete="on">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="email">Password</label>
+                            <input type="password" class="form-control" name="password" id="up_password"
+                                placeholder="Enter password" autocomplete="on">
+                        </div>
+                        <button type="submit" id="save_update_btn" class="btn btn-sm btn-primary">Update</button>
+
+                    </form>
+
+                </div>
+            </div>
+            {{-- <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary">Update</button>
+            </div> --}}
+        </div>
+    </div>
+</div>
+
 @push('js')
     <script type="text/javascript">
-        //  Display all data in datatable
+        /////////////////////////////////////  Display all data in datatable /////////////////////////////
         $(function() {
 
             var table = $('.yajra-datatable').DataTable({
@@ -72,8 +121,7 @@
             });
         });
 
-
-        // Delete record
+        // ///////////////////////////////////////////Delete record /////////////////////////////////////
         $('.yajra-datatable').on('click', '.deleteUser', function() {
             // alert('ok');
             var id = $(this).data('id');
@@ -88,7 +136,6 @@
                     },
                     success: function(response) {
                         if (response.success == 1) {
-
                             setTimeout(function() {
                                 location.reload();
                             }, 10);
@@ -102,18 +149,72 @@
 
 
 
-        // Update record
+        ///////////////////////////////////  Edit record        /////////////////////////////////////////
         $('.yajra-datatable').on('click', '.editUser', function() {
+
+            $(".modal").modal('show');
             var id = $(this).data('id');
-            alert(id);
+            var name = $(this).data('name');
+            var email = $(this).data('email');
+            var password = $(this).data('password');
+            // alert(id);
+
+            $('#update_by_id').val(id);
+            $('#up_name').val(name);
+            $('#up_email').val(email);
+            $('#up_password').val(password);
+
+        });
+
+        $("#close").click(function() {
+            $(".modal").modal('hide');
+        });
+
+        /////////////////////////////////////        save_update_ info        //////////////////////////////// 
+
+        $("#save_update_btn").click(function() {
+
+            // e.preventDefault();
+
+            let id = $('#update_by_id').val();
+            let name = $('#up_name').val();
+            let email = $('#up_email').val();
+            let password = $('#up_password').val();
+            // alert(id);
+            alert(name);
+            // alert(email);
+
+            // $.ajax({
+            //   url: "{{ route('student_delete') }}",
+            //   type: 'post',
+            //   data: {
+            //       id: id
+            //   },
+            //   success: function(response) {
+            //       if (response.success == 1) {
+            //           setTimeout(function() {
+            //               location.reload();
+            //           }, 10);
+            //       } else {
+            //           alert("Invalid ID.");
+            //       }
+            //   }
+            // });
+
             $.ajax({
-                url: " route('edit_data') ",
-                method: "post",
+                url: "{{ route('update_data') }}",
+                type: "POST",
                 data: {
-                    id: id
+                    id: id,
+                    name: name,
+                    email: email,
+                    password: password,
                 },
                 success: function(response) {
-                    console.log(response.success);
+                    if (response.status == 1) {
+                        $(".modal").modal('hide');
+                        $('#update_form')[0].reset();
+                    }
                 }
             });
 
