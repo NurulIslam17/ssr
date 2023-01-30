@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use DataTables;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash as HidePass;
-// use Illuminate\Testing\Fluent\Concerns\Hash;
+use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
 {
@@ -19,14 +18,23 @@ class StudentController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $data = Student::latest()->get();
-            return Datatables::of($data)
+            $data = Student::orderby('id','DESC')->get();
+            return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('status', function($row){
+                    if($row->status == 1){
+                         return "Active";
+                    }else{
+                         return "Inactive";
+                    }
+               }) 
                 ->addColumn('action', function ($row) {
-                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-                    return $actionBtn;
+                    // Update Button
+                 $updateButton = "<button class='btn btn-sm btn-info editUser' data-id='".$row->id."'><i class='fa-solid fa-pen-to-square'></i></button>";
+                 // Delete Button
+                 $deleteButton = "<button class='btn btn-sm btn-danger deleteUser' data-id='".$row->id."'><i class='fa-solid fa-trash'></i></button>";
+                 return $updateButton." ".$deleteButton;
                 })
-                ->rawColumns(['action'])
                 ->make(true);
         }
         return view('ssr.index');
@@ -56,7 +64,7 @@ class StudentController extends Controller
             DB::table('students')->insert([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => HidePass::make($request->password),
+                'password' => Hash::make($request->password),
             ]);
 
             return redirect()->route('student.index')->with('msg','New Record Created');
@@ -98,7 +106,7 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
     }
 
     /**
@@ -107,7 +115,7 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
         //
     }
@@ -126,5 +134,32 @@ class StudentController extends Controller
             $student->save();
         }
         return back()->with('msg', 'Status Changed');
+    }
+
+
+    public function delete(Request $request)
+    {
+        $id = $request->post('id');
+        // dd($id);
+        $data = Student::find($id);
+
+
+         if($data->delete()){
+             $response['success'] = 1;
+             $response['msg'] = 'Delete successfully'; 
+         }else{
+             $response['success'] = 0;
+             $response['msg'] = 'Invalid ID.';
+         }
+
+         return response()->json($response); 
+    }
+
+    //editData 
+    public function editData(Request $request)
+    {
+        $id = $request->post('id');
+        return response()->json($id);
+        $data = Student::find($id);
     }
 }
