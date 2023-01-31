@@ -6,8 +6,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-info">
-                <h5 class="modal-title text-light" id="exampleModalLabel">Create</h5>
-                <button type="button" class="close" id="insert_modal_close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title text-dark" id="exampleModalLabel">Create</h5>
+                <button type="button" class="close bg-danger text-light" id="insert_modal_close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -34,7 +34,7 @@
                             <input type="password" class="form-control" name="password" id="password"
                                 placeholder="Enter password" autocomplete="on">
                         </div>
-                        <button type="submit" id="save_btn" class="btn btn-sm btn-primary">Create</button>
+                        <button type="submit" id="save_btn" class="btn btn-sm btn-success">Create</button>
                     </form>
 
                 </div>

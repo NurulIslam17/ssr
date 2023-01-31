@@ -9,9 +9,7 @@
                     <i class="fa fa-server"></i> Server Side Rendering
                 </h5>
                 <p>{{ Session::get('msg') }}</p>
-                {{-- <a href="{{ route('student.create') }}" class="btn btn-sm btn-success rounded-0"> <i
-                        class="fa fa-plus pe-1"></i>Create</a> --}}
-                <a id="store_data" class="btn btn-sm btn-success"> <i class="fa fa-plus pe-1"></i>Insert</a>
+                <a id="store_data" class="btn btn-sm btn-primary"> <i class="fa fa-plus pe-1"></i>Create</a>
             </div>
         </div>
     </div>
@@ -44,7 +42,7 @@
         <div class="modal-content">
             <div class="modal-header bg-info">
                 <h5 class="modal-title text-light" id="exampleModalLabel">Edit</h5>
-                <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close bg-danger" id="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>

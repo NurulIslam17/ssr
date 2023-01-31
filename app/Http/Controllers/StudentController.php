@@ -31,10 +31,10 @@ class StudentController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     // Update Button
-                    $updateButton = "<button class='btn btn-sm btn-info editUser' data-id='" . $row->id . "' data-name='" . $row->name . "' data-email='" . $row->email . "' data-password='" . $row->password . "'><i class='fa-solid fa-pen-to-square'></i></button>";
+                    $updateButton = "<button class='btn btn-sm btn-primary text-dark p-1 editUser' title='Update Data' data-id='" . $row->id . "' data-name='" . $row->name . "' data-email='" . $row->email . "' data-password='" . $row->password . "'><i class='fa-solid fa-pen-to-square'></i></button>";
                     // Delete Button
-                    $deleteButton = "<button class='btn btn-sm btn-danger deleteUser' data-id='" . $row->id . "'><i class='fa-solid fa-trash'></i></button>";
-                    $statusButton = "<button class='btn btn-sm btn-secondary' id ='status_changehange_btn' data-id='" . $row->id . "'><i class='fa-solid fa-repeat'></i></button>";
+                    $deleteButton = "<button class='btn btn-sm btn-danger deleteUser' title='Delete Data'  data-id='" . $row->id . "'><i class='fa-solid fa-trash'></i></button>";
+                    $statusButton = "<button class='btn btn-sm btn-dark' title='Change Status'  id ='status_changehange_btn' data-id='" . $row->id . "'><i class='fa-solid fa-repeat'></i></button>";
                     return $updateButton . " " . $deleteButton." ".$statusButton;
                 })
                 ->make(true);
@@ -49,7 +49,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        return view('ssr.create');
+        // return view('ssr.create');
     }
 
     /**
