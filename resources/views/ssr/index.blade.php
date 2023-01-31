@@ -20,7 +20,7 @@
 
             <thead class="bg-info">
                 <tr class="">
-                    <th scope="col" class="text-center"> ID </th>
+                    <th scope="col" class="text-center"> SL </th>
                     <th scope="col" class="text-center"> Name </th>
                     <th scope="col" class="text-center"> Email </th>
                     <th scope="col" class="text-center"> Status </th>
@@ -124,10 +124,11 @@
             var id = $(this).data('id');
             // alert(id);
             var deleteConfirm = confirm("Are you sure?");
+
             if (deleteConfirm == true) {
                 $.ajax({
                     url: "{{ route('student_delete') }}",
-                    type: 'post',
+                    method: 'POST',
                     data: {
                         id: id
                     },
@@ -143,6 +144,7 @@
                 });
             }
         });
+
         ///////////////////////////////////  Edit record        /////////////////////////////////////////
         $('.yajra-datatable').on('click', '.editUser', function() {
 
@@ -164,6 +166,26 @@
             $(".modal").modal('hide');
         });
 
+        /////////////////////////////////////        status Change       //////////////////////////////// 
+
+        $('.yajra-datatable').on('click', '#status_changehange_btn', function() {
+            // alert('Ok');
+            var id = $(this).data('id');
+            var changeConfirm = confirm("Want to change the status?");
+            if (changeConfirm == true) {
+                $.ajax({
+                    url: " {{route('status_change')}} ",
+                    type: "POST",
+                    data: {
+                        id: id,
+                    },
+                    success: function(response) {
+                        alert('Status Changed Successfully!');
+                        window.location.href = "/student";
+                    }
+                });
+            }
+        });
         /////////////////////////////////////        save_update_ info        //////////////////////////////// 
 
         $("#save_update_btn").click(function() {
@@ -186,7 +208,7 @@
                     if (response.status == 1) {
                         $(".modal").modal('hide');
                         $('#update_form')[0].reset();
-                        window.location.href="/student";
+                        window.location.href = "/student";
                     }
                 }
             });

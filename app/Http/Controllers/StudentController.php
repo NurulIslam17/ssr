@@ -22,6 +22,10 @@ class StudentController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('status', function ($row) {
+                    // $active = "<span class='bg-info'>Active</span>";
+                    // $inactive = "<span class='bg-warning'>Inactive</span>";
+                    // return $active;
+
                     if ($row->status == 1) {
                         return "Active";
                     } else {
@@ -33,7 +37,8 @@ class StudentController extends Controller
                     $updateButton = "<button class='btn btn-sm btn-info editUser' data-id='" . $row->id . "' data-name='" . $row->name . "' data-email='" . $row->email . "' data-password='" . $row->password . "'><i class='fa-solid fa-pen-to-square'></i></button>";
                     // Delete Button
                     $deleteButton = "<button class='btn btn-sm btn-danger deleteUser' data-id='" . $row->id . "'><i class='fa-solid fa-trash'></i></button>";
-                    return $updateButton . " " . $deleteButton;
+                    $statusButton = "<button class='btn btn-sm btn-secondary' id ='status_changehange_btn' data-id='" . $row->id . "'><i class='fa-solid fa-repeat'></i></button>";
+                    return $updateButton . " " . $deleteButton." ".$statusButton;
                 })
                 ->make(true);
         }
@@ -120,18 +125,18 @@ class StudentController extends Controller
 
     //status
 
-    public function status($id)
+    public function status(Request $request)
     {
-        $student = Student::find($id);
-        // return $student;
-        if ($student->status == 1) {
-            $student->status = 0;
-            $student->save();
+        $status_id = $request->id;
+        $data = Student::find($status_id);
+        
+        if ($data->status == 1) {
+            DB::table('students')->where('id',$status_id)->update([ 'status'=>0]);
+            return response()->JSON(['status' => 1]);
         } else {
-            $student->status = 1;
-            $student->save();
+            DB::table('students')->where('id',$status_id)->update([ 'status'=>1]);
+            return response()->JSON(['status' => 1]);
         }
-        return back()->with('msg', 'Status Changed');
     }
 
 
