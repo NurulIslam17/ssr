@@ -9,8 +9,9 @@
                     <i class="fa fa-server"></i> Server Side Rendering
                 </h5>
                 <p>{{ Session::get('msg') }}</p>
-                <a href="{{ route('student.create') }}" class="btn btn-sm btn-success rounded-0"> <i
-                        class="fa fa-plus pe-1"></i>Create</a>
+                {{-- <a href="{{ route('student.create') }}" class="btn btn-sm btn-success rounded-0"> <i
+                        class="fa fa-plus pe-1"></i>Create</a> --}}
+                <a id="store_data" class="btn btn-sm btn-success"> <i class="fa fa-plus pe-1"></i>Insert</a>
             </div>
         </div>
     </div>
@@ -37,7 +38,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade editUser" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade editUser" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -80,6 +81,9 @@
         </div>
     </div>
 </div>
+
+
+@include('ssr.create_modal');
 
 @push('js')
     <script type="text/javascript">
@@ -145,22 +149,6 @@
             }
         });
 
-        ///////////////////////////////////  Edit record        /////////////////////////////////////////
-        $('.yajra-datatable').on('click', '.editUser', function() {
-
-            $(".modal").modal('show');
-            var id = $(this).data('id');
-            var name = $(this).data('name');
-            var email = $(this).data('email');
-            var password = $(this).data('password');
-            // alert(id);
-
-            $('#update_by_id').val(id);
-            $('#up_name').val(name);
-            $('#up_email').val(email);
-            $('#up_password').val(password);
-
-        });
 
         $("#close").click(function() {
             $(".modal").modal('hide');
@@ -174,7 +162,7 @@
             var changeConfirm = confirm("Want to change the status?");
             if (changeConfirm == true) {
                 $.ajax({
-                    url: " {{route('status_change')}} ",
+                    url: " {{ route('status_change') }} ",
                     type: "POST",
                     data: {
                         id: id,
@@ -186,6 +174,26 @@
                 });
             }
         });
+
+
+
+        ///////////////////////////////////  Edit record        /////////////////////////////////////////
+        $('.yajra-datatable').on('click', '.editUser', function() {
+
+            $("#edit_modal").modal('show');
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+            var email = $(this).data('email');
+            var password = $(this).data('password');
+            // alert(id);
+
+            $('#update_by_id').val(id);
+            $('#up_name').val(name);
+            $('#up_email').val(email);
+            $('#up_password').val(password);
+
+        });
+
         /////////////////////////////////////        save_update_ info        //////////////////////////////// 
 
         $("#save_update_btn").click(function() {

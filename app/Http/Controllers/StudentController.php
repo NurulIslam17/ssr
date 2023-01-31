@@ -22,9 +22,6 @@ class StudentController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('status', function ($row) {
-                    // $active = "<span class='bg-info'>Active</span>";
-                    // $inactive = "<span class='bg-warning'>Inactive</span>";
-                    // return $active;
 
                     if ($row->status == 1) {
                         return "Active";
@@ -65,7 +62,6 @@ class StudentController extends Controller
     {
         // return $request;
         try {
-
             DB::table('students')->insert([
                 'name' => $request->name,
                 'email' => $request->email,
